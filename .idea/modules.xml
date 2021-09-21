@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/BeamCalc.iml" filepath="$PROJECT_DIR$/.idea/BeamCalc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/beam-calc.iml" filepath="$PROJECT_DIR$/.idea/beam-calc.iml" />
     </modules>
   </component>
 </project>
