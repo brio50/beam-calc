@@ -47,13 +47,13 @@ Max Deflection:
 ⎝2    192   ⎠
 ```
 
-| Ix    | $`\delta_{max}`$ | $`\delta_{allowable}`$ | Pass |
-|-------|------------------|------------------------|------|
-|  6.04 | 0.30             | 0.27                   | No   |
-|  8.37 | 0.22             | 0.27                   | Yes  |
-| 12.06 | 0.15             | 0.27                   | Yes  |
+| Ix | &delta;<sub>max</sub> | &delta;<sub>allowable</sub> | Pass |
+|-------|------|------|-----|
+|  6.04 | 0.30 | 0.27 | No  |
+|  8.37 | 0.22 | 0.27 | Yes |
+| 12.06 | 0.15 | 0.27 | Yes |
 
-$`\delta_allowable = L/450`$ per https://www.spanco.com/blog/understanding-overhead-crane-deflection-and-criteria/ for aluminum gantry cranes.
+&delta;<sub>allowable</sub> = L/450 per https://www.spanco.com/blog/understanding-overhead-crane-deflection-and-criteria/ for aluminum gantry cranes.
 
 Overall, it was a good introductory project to learn some Python, PyCharm, and details of the sympy and matplotlib modules.
 
