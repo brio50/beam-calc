@@ -1,7 +1,7 @@
 # beam-calc
 
 ## Purpose
-I used [sympy's beam module](https://docs.sympy.org/latest/modules/physics/continuum_mechanics/beam_problems.html#example-7) to evaluate beam loadings for a workshop gantry crane design. I have a [S4x7.7 Aluminum I-Beam](https://www.onlinemetals.com/en/buy/aluminum/2-66-x-4-x-0-19-aluminum-i-beam-6061-t6-extruded-american-standard/pid/13218) which has the following properties:
+I used [sympy's beam module](https://docs.sympy.org/latest/modules/physics/continuum_mechanics/beam_problems.html#example-7) to evaluate beam loadings for a workshop gantry crane design. I have a [S4x7.7 Aluminum I-Beam](https://www.onlinemetals.com/en/buy/aluminum/2-66-x-4-x-0-19-aluminum-i-beam-6061-t6-extruded-american-standard/pid/13218)<sup>[1](#footnote1)</sup> which has the following properties:
 
 ![](https://www.onlinemetals.com/medias/8798569234462.jpg?context=bWFzdGVyfGltYWdlc3wzNDg2OHxpbWFnZS9qcGVnfGltYWdlcy9oY2QvaDE4LzkxMDI5MzIwODI3MTguanBnfDcwYjQxNDQxODE2NmI2ZmMyOTU4NTBjYjgzOGRlMDdkMDFjYzJhMzhjNWNlYzk4YWZjYmY2OWRjMWRiOGMyZTg)
 * Dimensions
@@ -57,3 +57,6 @@ Max Deflection:
 
 Overall, it was a good introductory project to learn some Python, PyCharm, and details of the sympy and matplotlib modules.
 
+
+## Footnotes
+<a name="footnote1">[1]</a>: `S4x7.7` is the designation for the equivalent a steel I-beam. If one exists for aluminum it would be `S4x2.7` following the specification  `HxLB/FT`
