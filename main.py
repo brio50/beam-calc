@@ -1,9 +1,11 @@
 from sympy.physics.continuum_mechanics.beam import Beam
 from sympy import *
+from sympy.plotting import plot, PlotGrid
+import matplotlib.pyplot as plt
 
 # https://docs.sympy.org/latest/modules/physics/continuum_mechanics/beam_problems.html#example-7
 
-def beam_me_up(__L, __E, __I, __F):
+def beam_me_up(__L, __E, __I, __F, color):
 
     ## sign convention
     # upward forces and clockwise moment are positive
@@ -12,10 +14,12 @@ def beam_me_up(__L, __E, __I, __F):
     L = symbols('L', positive=True)
     E, I, F = symbols('E I F')
 
-    ## beam definition
+    ## definition
+
+    # beam
     b = Beam(L, E, I)
 
-    # reactions
+    # beam reactions
     R1, R2 = symbols('R1  R2')
     M1, M2 = symbols('M1, M2')
     b.apply_load(R1, 0, -1)
@@ -26,7 +30,7 @@ def beam_me_up(__L, __E, __I, __F):
     # beam load
     b.apply_load(-F, L/2, -1)
 
-    # boundary conditions
+    # beam boundary conditions
     b.bc_deflection = [(0, 0), (L, 0)]
     b.bc_slope = [(0, 0), (L, 0)]
 
@@ -36,8 +40,10 @@ def beam_me_up(__L, __E, __I, __F):
     # print results
     print('Reaction Loads:')
     pprint(b.reaction_loads)
+
     print('Load:')
     pprint(b.load)
+
     print('Max Deflection:')
     pprint(b.max_deflection())
 
@@ -50,7 +56,7 @@ def beam_me_up(__L, __E, __I, __F):
     #fbd.show()
 
     # shear, slope, moment, deflection
-    b.plot_loading_results(subs={L: __L, E: __E, I: __I, F: __F})
+    #ax0 = b.plot_loading_results(subs={L: __L, E: __E, I: __I, F: __F})
     #ax1 = b.plot_shear_force()
     #ax2 = b.plot_slope()
     #ax3 = b.plot_bending_moment()
@@ -63,19 +69,54 @@ def beam_me_up(__L, __E, __I, __F):
     #ax0._backend.process_series()
     #ax0._backend.ax[0].scatter([0, 60, 120], [0, 0, 0], marker='x', color='r')
 
-    #ax.style.available
-    #ax.backend
-    #print(ax0.backend.__dict__)
+    # extracting sympy plot data from beam.py for plotting outside of this function
+    ax1 = plot(b.shear_force().subs({L: __L, E: __E, I: __I, F: __F}), (b.variable, 0, __L),
+               title="Shear Force", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\mathrm{V}$', show=False)
+    ax2 = plot(b.bending_moment().subs({L: __L, E: __E, I: __I, F: __F}), (b.variable, 0, __L),
+               title="Bending Moment", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\mathrm{M}$', show=False)
+    ax3 = plot(b.slope().subs({L: __L, E: __E, I: __I, F: __F}), (b.variable, 0, __L),
+               title="Slope", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\theta$', show=False)
+    ax4 = plot(b.deflection().subs({L: __L, E: __E, I: __I, F: __F}), (b.variable, 0, __L),
+               title="Deflection", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\delta$', show=False)
 
-    # doesnt work?
-    #breakpoint()
+    return ax1, ax2, ax3, ax4
 
+# https://stackoverflow.com/q/63483960
+def move_sympyplot_to_axes(p, ax):
+    # move axes
+    backend = p.backend(p)
+    backend.ax = ax
+    backend._process_series(backend.parent._series, ax, backend.parent)
+    backend.ax.spines['right'].set_color('none')
+    backend.ax.spines['bottom'].set_position('zero')
+    backend.ax.spines['top'].set_color('none')
+    plt.close(backend.fig)
 
 L = 10*12 #in
 E = 9900E3 #lb/in2
 Ix = [6.04, 8.37] #in4
 F = 2000 #lb
-x = 3  # L/<value>
 
+colors = ['red', 'blue', 'green']
+p=[]
 for i, I in enumerate(Ix):
-    beam_me_up(L, E, I, F)
+    obj = beam_me_up(L, E, I, F, colors[i])
+    p.append(obj)
+
+# matplotlib overlplotting
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(nrows=4)
+
+for i, P in enumerate(p):
+    move_sympyplot_to_axes(P[0], ax1)
+    move_sympyplot_to_axes(P[1], ax2)
+    move_sympyplot_to_axes(P[2], ax3)
+    move_sympyplot_to_axes(P[3], ax4)
+
+# legend
+handles = ax4.get_legend_handles_labels()[0] #return first value of function with [0]
+labels = [str(Ix) for Ix in Ix] # convert list of floats to list of strings
+plt.legend(handles, labels, loc='upper right', title="Ix")
+
+# voila
+plt.tight_layout()
+plt.show()
