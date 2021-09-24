@@ -103,6 +103,14 @@ for i, I in enumerate(Ix):
     obj = beam_me_up(L, E, I, F, colors[i])
     p.append(obj)
 
+    # https://www.spanco.com/blog/understanding-overhead-crane-deflection-and-criteria/
+    delta = (F * L**3) / (192 * E * I)
+    allowable = L/450
+    passed = False
+    if delta < allowable:
+        passed = True
+    print(f'delta_max_Ix-{I} = {delta:.2f} ; allowable = {allowable:.2f}; passed: {passed}')
+
 # matplotlib overlplotting
 fig, (ax1, ax2, ax3, ax4) = plt.subplots(nrows=4)
 
@@ -113,10 +121,18 @@ for i, P in enumerate(p):
     move_sympyplot_to_axes(P[3], ax4)
 
 # legend
-handles = ax4.get_legend_handles_labels()[0] #return first value of function with [0]
+handles = ax1.get_legend_handles_labels()[0] #return first value of function with [0]
 labels = [str(Ix) for Ix in Ix] # convert list of floats to list of strings
-plt.legend(handles, labels, loc='upper right', title="Ix")
+ax1.legend(handles, labels, loc='right', title='Moment of Inertia (Ix)', ncol=3)
+
+# grid/limits
+plt.tight_layout()
+for i, ax in enumerate(fig.axes):
+    ax.set_axisbelow(True)
+    ax.minorticks_on()
+    ax.grid(which='major', linestyle='-', linewidth='0.5', color='gray')
+    ax.grid(which='minor', linestyle=':', linewidth='0.5', color='gray')
+    ax.set_xlim([0, L])
 
 # voila
-plt.tight_layout()
 plt.show()
