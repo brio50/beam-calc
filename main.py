@@ -71,13 +71,13 @@ def beam_me_up(__L, __E, __I, __F, color):
 
     # extracting sympy plot data from beam.py for plotting outside of this function
     ax1 = plot(b.shear_force().subs({L: __L, E: __E, I: __I, F: __F}), (b.variable, 0, __L),
-               title="Shear Force", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\mathrm{V}$', show=False)
+               title="Shear Force", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\mathrm{V\quad(lb)}$', show=False)
     ax2 = plot(b.bending_moment().subs({L: __L, E: __E, I: __I, F: __F}), (b.variable, 0, __L),
-               title="Bending Moment", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\mathrm{M}$', show=False)
+               title="Bending Moment", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\mathrm{M\quad(lb \cdot in)}$', show=False)
     ax3 = plot(b.slope().subs({L: __L, E: __E, I: __I, F: __F}), (b.variable, 0, __L),
                title="Slope", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\theta$', show=False)
     ax4 = plot(b.deflection().subs({L: __L, E: __E, I: __I, F: __F}), (b.variable, 0, __L),
-               title="Deflection", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\delta$', show=False)
+               title="Deflection", line_color=color, xlabel=r'$\mathrm{x}$', ylabel=r'$\delta\quad(in)$', show=False)
 
     return ax1, ax2, ax3, ax4
 
