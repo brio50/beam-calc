@@ -94,7 +94,7 @@ def move_sympyplot_to_axes(p, ax):
 
 L = 10*12 #in
 E = 9900E3 #lb/in2
-Ix = [6.04, 8.37] #in4
+Ix = [6.04, 8.37, 12.06] #in4
 F = 2000 #lb
 
 colors = ['red', 'blue', 'green']
