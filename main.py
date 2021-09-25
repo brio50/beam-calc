@@ -87,9 +87,14 @@ def move_sympyplot_to_axes(p, ax):
     backend = p.backend(p)
     backend.ax = ax
     backend._process_series(backend.parent._series, ax, backend.parent)
-    backend.ax.spines['right'].set_color('none')
-    backend.ax.spines['bottom'].set_position('zero')
+    # remove top and right spines
     backend.ax.spines['top'].set_color('none')
+    backend.ax.spines['right'].set_color('none')
+    # move left and bottom spine to left and bottom of axis extents, previously 'bottom' was set to 'zero'
+    backend.ax.spines['left'].set_position(('axes', 0))
+    backend.ax.spines['bottom'].set_position(('axes', 0))
+    # correct ylabel position, align vertically to center
+    ax.yaxis.set_label_coords(-0.1, 0.5)
     plt.close(backend.fig)
 
 L = 10*12 #in
@@ -112,27 +117,35 @@ for i, I in enumerate(Ix):
     print(f'delta_max_Ix-{I} = {delta:.2f} ; allowable = {allowable:.2f}; passed: {passed}')
 
 # matplotlib overlplotting
-fig, (ax1, ax2, ax3, ax4) = plt.subplots(nrows=4)
+fig, axes = plt.subplots(nrows=4)
+dpi = fig.get_dpi()
+fig.set_size_inches(800.0 / float(dpi), 600.0 / float(dpi))
 
 for i, P in enumerate(p):
-    move_sympyplot_to_axes(P[0], ax1)
-    move_sympyplot_to_axes(P[1], ax2)
-    move_sympyplot_to_axes(P[2], ax3)
-    move_sympyplot_to_axes(P[3], ax4)
+    move_sympyplot_to_axes(P[0], axes[0])
+    move_sympyplot_to_axes(P[1], axes[1])
+    move_sympyplot_to_axes(P[2], axes[2])
+    move_sympyplot_to_axes(P[3], axes[3])
 
-# legend
-handles = ax1.get_legend_handles_labels()[0] #return first value of function with [0]
-labels = [str(Ix) for Ix in Ix] # convert list of floats to list of strings
-ax1.legend(handles, labels, loc='right', title='Moment of Inertia (Ix)', ncol=3)
+# requirement
+axes[3].axhline(-allowable, linestyle='-', linewidth='1.0', color='magenta', zorder=0)
 
-# grid/limits
-plt.tight_layout()
-for i, ax in enumerate(fig.axes):
+# grid/limits/labels
+for i, ax in enumerate(axes):
     ax.set_axisbelow(True)
     ax.minorticks_on()
     ax.grid(which='major', linestyle='-', linewidth='0.5', color='gray')
     ax.grid(which='minor', linestyle=':', linewidth='0.5', color='gray')
     ax.set_xlim([0, L])
+    #ylabel = ax.yaxis.get_label()
+    #ylabel.set_verticalalignment('center')
+
+# legend
+handles = axes[0].get_legend_handles_labels()[0]  # return first value of function with [0]
+labels = [str(Ix) for Ix in Ix]  # convert list of floats to list of strings
+axes[0].legend(handles, labels, loc='right', title='Moment of Inertia (Ix)', ncol=3)
 
 # voila
+fig.tight_layout()
+fig.savefig('./result.png', dpi=100)
 plt.show()
