@@ -11,15 +11,15 @@ I used [sympy's beam module](https://docs.sympy.org/latest/modules/physics/conti
   * Thickness: `0.19 in`
   * Shape Type: `American Standard`
   * Weight: `2.66 lb/ft`
-  * Ix = `6.04 in^4`
+  * `Ix = 6.04 in^4`
 * Material
   * `6061-T6`
-  * Modulus of Elasticty (E): `9.9 ksi`
+  * Modulus of Elasticty (`E`): `9.9 ksi`
 
 ## Gantry Design
-* Span (L): `10 ft`
+* Span (`L`): `10 ft`
 * End Constraints: `Fixed-Fixed`
-* Point Load (F): `2000 lb` @ `L/2`
+* Point Load (`F`): `2000 lb` @ `L/2`<sup>[2](#footnote2)</sup>
 
 From my initial research, it appears this beam will handle a point load of 1,000 lb, however I want to be able to lift as much as 2,000 lb. This program was inspired by [BMREINF9](https://www.cesdb.com/bmreinf9.html) to evaluate the effects of increasing Ix for various I-Beam reinforcement configurations. I attached the Excel file I played with to `./raw`.
 
@@ -59,4 +59,5 @@ Overall, it was a good introductory project to learn some Python, PyCharm, and d
 
 
 ## Footnotes
-<a name="footnote1">[1]</a>: `S4x7.7` is the designation for the equivalent a steel I-beam. If one exists for aluminum it would be `S4x2.7` following the specification  `HxLB/FT`
+* <a name="footnote1">[1]</a>: `S4x7.7` is the designation for the equivalent a steel I-beam. If one exists for aluminum it would be `S4x2.7` following the specification  `HxLB/FT`. See https://www.aisc.org/publications/historic-shape-references/ and https://www.aisc.org/globalassets/aisc/publications/historic-shape-references/hot-rolled-carbon-steel-structural-shapes-1948.pdf for a great selection of tables!
+* <a name="footnote2">[2]</a>: Load (`F`) should account for the weight of the beam as well, I think this is typically referred to as the "dead" load. Once the beam structure + trolley + chain hoist/fall weights are known, I will add this value to `F` 
