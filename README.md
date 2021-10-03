@@ -21,9 +21,7 @@ I used [sympy's beam module](https://docs.sympy.org/latest/modules/physics/conti
 * End Constraints: `Fixed-Fixed`
 * Point Load (`F`): `2000 lb` @ `L/2`<sup>[2](#footnote2)</sup>
 
-From my initial research, it appears this beam will handle a point load of 1,000 lb, however I want to be able to lift as much as 2,000 lb. This program was inspired by [BMREINF9](https://www.cesdb.com/bmreinf9.html) to evaluate the effects of increasing Ix for various I-Beam reinforcement configurations. I attached the Excel file I played with to `./raw`.
-
-![](https://www.cesdb.com/images/bmreinf9-screenshot.jpg)
+From my initial research, it appears this beam will handle a point load of 1,000 lb, however I want to be able to lift as much as 2,000 lb. `beam-calc` was inspired by the [AISC's "Steel Tools" Website](https://www.steeltools.org/) >[BEAM ANALYSIS & DESIGN](https://www.steeltools.org/beam.php) > Tool ["BMREINF13.xls"](https://linus.aisc.org/steeltools/dl_count/click.php?id=%20BMREINF13.xls) to evaluate the effects of increasing Ix for various I-Beam reinforcement configurations. I did not use its analysis capabilities, merely it's ability to calculate various moments of inertias for different beam reinforcement techniques suggested.
 
 ### Options
 `main.py` currently has three Ix values for 1) Member Only 2) Member + Plate Bottom and 3) Member + Plate Top and Bottom 
