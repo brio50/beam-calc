@@ -19,14 +19,14 @@ I used [sympy's beam module](https://docs.sympy.org/latest/modules/physics/conti
 ## Gantry Design
 * Span (`L`): `10 ft`
 * End Constraints: `Fixed-Fixed`
-* Point Load (`F`): `2000 lb` @ `L/2`<sup>[2](#footnote2)</sup>
+* Point Load (`F`): `2120 lb` @ `L/2`<sup>[2](#footnote2)</sup>
 
-From my initial research, it appears this beam will handle a point load of 1,000 lb, however I want to be able to lift as much as 2,000 lb. `beam-calc` was inspired by the [AISC's "Steel Tools" Website](https://www.steeltools.org/) >[BEAM ANALYSIS & DESIGN](https://www.steeltools.org/beam.php) > Tool ["BMREINF13.xls"](https://linus.aisc.org/steeltools/dl_count/click.php?id=%20BMREINF13.xls) to evaluate the effects of increasing Ix for various I-Beam reinforcement configurations. I did not use its analysis capabilities, merely it's ability to calculate various moments of inertias for different beam reinforcement techniques suggested.
+From my initial research, it appears this beam will handle a point load of 1,000 lb, however I want to be able to lift as much as 2,000 lb. `beam-calc` was inspired by the [AISC's "Steel Tools" Website](https://www.steeltools.org/) >[BEAM ANALYSIS & DESIGN](https://www.steeltools.org/beam.php) > Tool ["BMREINF13.xls"](https://linus.aisc.org/steeltools/dl_count/click.php?id=%20BMREINF13.xls) to evaluate the effects of increasing Ix for various I-Beam reinforcement configurations. I did not use its analysis capabilities, merely it's ability to calculate various moments of inertias for different beam reinforcement techniques suggested. https://clearcalcs.com/freetools/free-moment-of-inertia-calculator/us also seems like a good option for calculations of composite shape properties.
 
 ### Options
-`main.py` currently has three Ix values for 1) Member Only 2) Member + Plate Bottom and 3) Member + Plate Top and Bottom 
+`main.py` currently has three Ix values for 1) Member Only 2) Member + Plate Bottom (or Top) and 3) Member + Plate Top and Bottom. The bar stock is `0.25 x 3` inches.
 
-[`Ix = [6.04, 8.37, 12.06] #in4`](https://github.com/brio50/beam-calc/blob/main/main.py#L97)
+[`Ix = [6.04, 8.6, 12.83] #in4`](https://github.com/brio50/beam-calc/blob/main/main.py#L97)
 
 ## Findings
 
@@ -48,8 +48,8 @@ Max Deflection:
 | Ix | &delta;<sub>max</sub> | &delta;<sub>allowable</sub> | Pass |
 |-------|------|------|-----|
 |  6.04 | 0.30 | 0.27 | No  |
-|  8.37 | 0.22 | 0.27 | Yes |
-| 12.06 | 0.15 | 0.27 | Yes |
+|  8.6  | 0.22 | 0.27 | Yes |
+| 12.83 | 0.15 | 0.27 | Yes |
 
 &delta;<sub>allowable</sub> = L/450 per https://www.spanco.com/blog/understanding-overhead-crane-deflection-and-criteria/ for aluminum gantry cranes.
 
@@ -58,4 +58,4 @@ Overall, it was a good introductory project to learn some Python, PyCharm, and d
 
 ## Footnotes
 * <a name="footnote1">[1]</a>: `S4x7.7` is the designation for the equivalent a steel I-beam. If one exists for aluminum it would be `S4x2.7` following the specification  `HxLB/FT`. See https://www.aisc.org/publications/historic-shape-references/ and https://www.aisc.org/globalassets/aisc/publications/historic-shape-references/hot-rolled-carbon-steel-structural-shapes-1948.pdf for a great selection of tables!
-* <a name="footnote2">[2]</a>: Load (`F`) should account for the weight of the beam as well, I think this is typically referred to as the "dead" load. Once the beam structure + trolley + chain hoist/fall weights are known, I will add this value to `F` 
+* <a name="footnote2">[2]</a>: Load (`F`) should account for the weight of the beam as well, I think this is typically referred to as the "dead" load. Estimated beam weight + trolley + chain hoist/fall weights are added to `F` 
