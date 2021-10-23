@@ -58,7 +58,7 @@ I updated this in the [Second Release](https://github.com/brio50/beam-calc/relea
 
 ### Fixed-Fixed
 
-![](fbd_fixed.png)
+![](./img/fbd_fixed.png)
 
 |Aluminum|Steel|
 |--------|-----|
@@ -89,7 +89,7 @@ Analytical Expression for Maximum Deflection:
 
 ### Simple-Simple
 
-![](fbd_simple.png)
+![](./img/fbd_simple.png)
 
 |Aluminum|Steel|
 |--------|-----|
