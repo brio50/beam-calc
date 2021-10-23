@@ -36,28 +36,34 @@ From my initial research, it appears this beam will handle a point load of 1,000
         <td><img src="./img/s4x7.7_3.png" height="190"></td>
     </tr>
     <tr>
-        <td>1. Member Only := `Ix = 6.04`</td>
-        <td>2. Member + Plate Bottom (or Top) := `Ix = 8.6`</td>
-        <td>3. Member + Plate Top and Bottom := `Ix = 12.83`</td>
+        <td>1. Member Only</td>
+        <td>2. Member + Plate Bottom (or Top)</td>
+        <td>3. Member + Plate Top and Bottom</td>
     </tr>
 </table>
 
-The bar stock is `0.25 x 3` inches for cases 2. and 3. The resultant moment of inertia list in the code is [`Ix = [6.04, 8.6, 12.83] #in4`](https://github.com/brio50/beam-calc/blob/main/main.py#L131)
+The bar stock is `0.25 x 3` inches for cases 2. and 3. 
+
+The resultant moment of inertia list in the code is [`Ix = [6.04, 8.6, 12.83] #in4`](https://github.com/brio50/beam-calc/blob/main/main.py#L131)
 
 ## Analysis
 
 If I had to do this all over again, I definitely wouldn't use `sympy`. It was more trouble manipulating [`plot_loading_results()`](https://docs.sympy.org/latest/modules/physics/continuum_mechanics/beam.html#sympy.physics.continuum_mechanics.beam.Beam.plot_loading_results) to work as I envisioned than simply using [Beam Design Formulas](https://www.awc.org/pdf/codes-standards/publications/design-aids/AWC-DA6-BeamFormulas-0710.pdf) - Figure 24. or 25. - directly.
 
-I updated this tool to 
+I updated this in the [Second Release](https://github.com/brio50/beam-calc/releases) tool to 
 1. include a calculation with `simple-simple` end constraints, which has much larger deflection
 2. evaluate a steel S4x7.7 I-Beam
 
 ### Fixed-Fixed
 
+|Aluminum|Steel|
+|--------|-----|
 |![](./img/result_aluminum_fixed-fixed.png)|![](./img/result_steel_fixed-fixed.png)|
 
 ### Simple-Simple
 
+|Aluminum|Steel|
+|--------|-----|
 |![](./img/result_aluminum_simple-simple.png)|![](./img/result_steel_simple-simple.png)|
 
 ## Conclusion
@@ -74,26 +80,29 @@ Max Deflection:
 ```
 
 **Table 1.** Material: Aluminum, Constraint: Fixed-Fixed 
-Material = Aluminum, Constraints = fixed-fixed
 | Ix | &delta;<sub>max</sub> | &delta;<sub>allowable</sub> | Pass |
+|----|-----------------------|-----------------------------|------|
 |       6.04 |       0.32 |       0.27 | False |
 |       8.60 |       0.22 |       0.27 | True |
 |      12.83 |       0.15 |       0.27 | True |
 
 **Table 2.** Material: Steel, Constraint: Fixed-Fixed 
 | Ix | &delta;<sub>max</sub> | &delta;<sub>allowable</sub> | Pass |
+|----|-----------------------|-----------------------------|------|
 |       6.04 |       0.11 |       0.27 | True |
 |       8.60 |       0.08 |       0.27 | True |
 |      12.83 |       0.05 |       0.27 | True |
 
 **Table 3.** Material: Aluminum, Constraint: Simple-Simple
 | Ix | &delta;<sub>max</sub> | &delta;<sub>allowable</sub> | Pass |
+|----|-----------------------|-----------------------------|------|
 |       6.04 |       0.32 |       0.27 | False |
 |       8.60 |       0.22 |       0.27 | True |
 |      12.83 |       0.15 |       0.27 | True |
 
 **Table 4.** Material: Steel, Constraint: Simple-Simple
 | Ix | &delta;<sub>max</sub> | &delta;<sub>allowable</sub> | Pass |
+|----|-----------------------|-----------------------------|------|
 |       6.04 |       0.11 |       0.27 | True |
 |       8.60 |       0.08 |       0.27 | True |
 |      12.83 |       0.05 |       0.27 | True |
