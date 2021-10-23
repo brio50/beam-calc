@@ -58,6 +58,8 @@ I updated this in the [Second Release](https://github.com/brio50/beam-calc/relea
 
 ### Fixed-Fixed
 
+![](fbd_fixed.png)
+
 |Aluminum|Steel|
 |--------|-----|
 |![](./img/result_aluminum_fixed-fixed.png)|![](./img/result_steel_fixed-fixed.png)|
@@ -87,6 +89,8 @@ Analytical Expression for Maximum Deflection:
 
 ### Simple-Simple
 
+![](fbd_simple.png)
+
 |Aluminum|Steel|
 |--------|-----|
 |![](./img/result_aluminum_simple-simple.png)|![](./img/result_steel_simple-simple.png)|
@@ -97,7 +101,7 @@ Analytical Expression for Maximum Deflection:
 ⎜   L ⋅│───│⎟
 ⎜L     │E⋅I│⎟
 ⎜─, ────────⎟
-⎝2    48   ⎠
+⎝2    48    ⎠
 ```
 
 **Table 3.** Material: Aluminum, Constraint: Simple-Simple
