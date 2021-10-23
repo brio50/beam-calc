@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # https://docs.sympy.org/latest/modules/physics/continuum_mechanics/beam_problems.html#example-7
 
-def beam_me_up(__L, __E, __I, __F, color):
+def beam_me_up(rxn, __L, __E, __I, __F, color):
 
     ## sign convention
     # upward forces and clockwise moment are positive
@@ -19,33 +19,54 @@ def beam_me_up(__L, __E, __I, __F, color):
     # beam
     b = Beam(L, E, I)
 
-    # beam reactions
-    R1, R2 = symbols('R1  R2')
-    M1, M2 = symbols('M1, M2')
-    b.apply_load(R1, 0, -1)
-    b.apply_load(M1, 0, -2)
-    b.apply_load(R2, L, -1)
-    b.apply_load(M2, L, -2)
+    if rxn == 'fixed-fixed':
 
-    # beam load
-    b.apply_load(-F, L/2, -1)
+        # beam reactions
+        R1, R2 = symbols('R1  R2')
+        M1, M2 = symbols('M1, M2')
+        b.apply_load(R1, 0, -1)
+        b.apply_load(M1, 0, -2)
+        b.apply_load(R2, L, -1)
+        b.apply_load(M2, L, -2)
 
-    # beam boundary conditions
-    b.bc_deflection = [(0, 0), (L, 0)]
-    b.bc_slope = [(0, 0), (L, 0)]
+        # beam load
+        b.apply_load(-F, L / 2, -1)
 
-    ## solve
-    b.solve_for_reaction_loads(R1, R2, M1, M2)
+        # beam boundary conditions
+        b.bc_deflection = [(0, 0), (L, 0)]
+        b.bc_slope = [(0, 0), (L, 0)]
+
+        # solve
+        b.solve_for_reaction_loads(R1, R2, M1, M2)
+
+    elif rxn == 'simple-simple':
+
+        # beam reactions
+        R1, R2 = symbols('R1  R2')
+        b.apply_load(R1, 0, -1)
+        b.apply_load(R2, L, -1)
+
+        # beam load
+        b.apply_load(-F, L / 2, -1)
+
+        # beam boundary conditions
+        b.bc_deflection = [(0, 0), (L, 0)]
+
+        # solve
+        b.solve_for_reaction_loads(R1, R2)
+
+    else :
+        print("No command defined!")
 
     # print results
-    print('Reaction Loads:')
-    pprint(b.reaction_loads)
+    #print('Reaction Loads:')
+    #pprint(b.reaction_loads)
 
-    print('Load:')
-    pprint(b.load)
+    #print('Load:')
+    #pprint(b.load)
 
-    print('Max Deflection:')
-    pprint(b.max_deflection())
+    #print('Max Deflection:')
+    #pprint(b.max_deflection())
 
     ## plotting
 
@@ -97,55 +118,99 @@ def move_sympyplot_to_axes(p, ax):
     ax.yaxis.set_label_coords(-0.1, 0.5)
     plt.close(backend.fig)
 
-L = 10*12 #in
-E = 9900E3 #lb/in2
-Ix = [6.04, 8.6, 12.83] #in4
-F = 2120 #lb    90 lb trolley+hoist   3 lb/ft * 10 = 30 lb
+## MAIN
 
-colors = ['red', 'blue', 'green']
-p=[]
-for i, I in enumerate(Ix):
-    obj = beam_me_up(L, E, I, F, colors[i])
-    p.append(obj)
+beam = {
+        "L": {
+            "Name": "Length",
+            "Value": 120,
+            "Unit": "in"
+        },
+        "Ix": {
+            "Name": "Moment of Inertia",
+            "Value": [6.04, 8.6, 12.83],
+            "Unit": "in4"
+        },
+        "E": {
+            "Name": "Modulus of Elasticity",
+            "Material": ["Aluminum", "Steel"],
+            "Value": [9900E3, 2.901E7],
+            "Unit": "lb/in2"
+        },
+        "F": {
+            "Name": "Point Loads",
+            "Value": [2120, 2200],
+            "Unit": "lb"
+        },
+        "RXN": {
+            "Name": "Reaction",
+            "Value": ["fixed-fixed", "simple-simple"]
+        }
+}
 
-    # https://www.spanco.com/blog/understanding-overhead-crane-deflection-and-criteria/
-    delta = (F * L**3) / (192 * E * I)
-    allowable = L/450
-    passed = False
-    if delta < allowable:
-        passed = True
-    print(f'delta_max_Ix-{I} = {delta:.2f} ; allowable = {allowable:.2f}; passed: {passed}')
+for i, E in enumerate(beam['E']['Value']):
 
-# matplotlib overlplotting
-fig, axes = plt.subplots(nrows=4)
-dpi = fig.get_dpi()
-fig.set_size_inches(800.0 / float(dpi), 600.0 / float(dpi))
+    MATERIAL = beam['E']['Material'][i]
+    L = beam['L']['Value']
+    F = beam['F']['Value'][i]
 
-for i, P in enumerate(p):
-    move_sympyplot_to_axes(P[0], axes[0])
-    move_sympyplot_to_axes(P[1], axes[1])
-    move_sympyplot_to_axes(P[2], axes[2])
-    move_sympyplot_to_axes(P[3], axes[3])
+    for j, RXN in enumerate(beam['RXN']['Value']):
 
-# requirement
-axes[3].axhline(-allowable, linestyle='-', linewidth='1.0', color='magenta', zorder=0)
+        Ix = beam['Ix']['Value']
+        colors = ['red', 'blue', 'green']
+        p = []
 
-# grid/limits/labels
-for i, ax in enumerate(axes):
-    ax.set_axisbelow(True)
-    ax.minorticks_on()
-    ax.grid(which='major', linestyle='-', linewidth='0.5', color='gray')
-    ax.grid(which='minor', linestyle=':', linewidth='0.5', color='gray')
-    ax.set_xlim([0, L])
-    #ylabel = ax.yaxis.get_label()
-    #ylabel.set_verticalalignment('center')
+        title = f'Material = {MATERIAL}, Constraints = {RXN}'
+        print(title)
+        for k, I in enumerate(Ix):
 
-# legend
-handles = axes[0].get_legend_handles_labels()[0]  # return first value of function with [0]
-labels = [str(Ix) for Ix in Ix]  # convert list of floats to list of strings
-axes[0].legend(handles, labels, loc='right', title='Moment of Inertia (Ix)', ncol=3)
+            obj = beam_me_up(RXN, L, E, I, F, colors[k])
+            p.append(obj)
 
-# voila
-fig.tight_layout()
-fig.savefig('./result.png', dpi=100)
-plt.show()
+            # https://www.spanco.com/blog/understanding-overhead-crane-deflection-and-criteria/
+            delta = (F * L**3) / (192 * E * I)
+            allowable = L/450
+            passed = False
+            if delta < allowable:
+                passed = True
+
+            if k == 0:
+                print(f'| Ix | &delta;<sub>max</sub> | &delta;<sub>allowable</sub> | Pass |')
+
+            print(f'| {I:10.2f} | {delta:10.2f} | {allowable:10.2f} | {passed} |')
+
+        # matplotlib overlplotting
+        fig, axes = plt.subplots(nrows=4)
+        dpi = fig.get_dpi()
+        fig.set_size_inches(800.0 / float(dpi), 600.0 / float(dpi))
+
+        for P in p:
+            move_sympyplot_to_axes(P[0], axes[0])
+            move_sympyplot_to_axes(P[1], axes[1])
+            move_sympyplot_to_axes(P[2], axes[2])
+            move_sympyplot_to_axes(P[3], axes[3])
+
+        # requirement
+        axes[3].axhline(-allowable, linestyle='-', linewidth='1.0', color='magenta', zorder=0)
+
+        # grid/limits/labels
+        for ax in axes:
+            ax.set_axisbelow(True)
+            ax.minorticks_on()
+            ax.grid(which='major', linestyle='-', linewidth='0.5', color='gray')
+            ax.grid(which='minor', linestyle=':', linewidth='0.5', color='gray')
+            ax.set_xlim([0, L])
+            #ylabel = ax.yaxis.get_label()
+            #ylabel.set_verticalalignment('center')
+
+        # legend
+        handles = axes[0].get_legend_handles_labels()[0]  # return first value of function with [0]
+        labels = [str(Ix) for Ix in Ix]  # convert list of floats to list of strings
+        axes[0].legend(handles, labels, loc='right', title='Moment of Inertia (Ix)', ncol=3)
+
+        # voila
+        fig.tight_layout()
+        fig.suptitle(title, fontsize=10, x=0.5, y=0.05, color='gray')
+        filename = f'./img/result_{MATERIAL.lower()}_{RXN}.png'
+        fig.savefig(filename, dpi=100)
+        plt.show()
