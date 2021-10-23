@@ -59,14 +59,14 @@ def beam_me_up(rxn, __L, __E, __I, __F, color):
         print("No command defined!")
 
     # print results
-    #print('Reaction Loads:')
-    #pprint(b.reaction_loads)
+    print('Reaction Loads:')
+    pprint(b.reaction_loads)
 
-    #print('Load:')
-    #pprint(b.load)
+    print('Load:')
+    pprint(b.load)
 
-    #print('Max Deflection:')
-    #pprint(b.max_deflection())
+    print('Max Deflection:')
+    pprint(b.max_deflection())
 
     ## plotting
 
@@ -168,7 +168,11 @@ for i, E in enumerate(beam['E']['Value']):
             p.append(obj)
 
             # https://www.spanco.com/blog/understanding-overhead-crane-deflection-and-criteria/
-            delta = (F * L**3) / (192 * E * I)
+            # I think I could've used the b.max_deflection() formula with subs, but screw it!
+            if RXN == 'fixed-fixed':
+                delta = (F * L**3) / (192 * E * I)
+            elif RXN == 'simple-simple':
+                delta = (F * L ** 3) / (48 * E * I)
             allowable = L/450
             passed = False
             if delta < allowable:
@@ -176,6 +180,7 @@ for i, E in enumerate(beam['E']['Value']):
 
             if k == 0:
                 print(f'| Ix | &delta;<sub>max</sub> | &delta;<sub>allowable</sub> | Pass |')
+                print(f'|----|-----------------------|-----------------------------|------|')
 
             print(f'| {I:10.2f} | {delta:10.2f} | {allowable:10.2f} | {passed} |')
 
